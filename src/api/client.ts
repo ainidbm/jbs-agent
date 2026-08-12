@@ -9,11 +9,10 @@
  */
 
 import { getToken } from "./auth";
-
-const BASE = (import.meta as any).env?.VITE_WORKER_URL || "";
+import { apiUrl, redirectToLogin } from "./config";
 
 async function request<T>(path: string, params?: Record<string, string | number | undefined>): Promise<T> {
-  const url = new URL(`${BASE}${path}`, window.location.origin);
+  const url = new URL(apiUrl(path), window.location.origin);
   if (params) {
     Object.entries(params).forEach(([k, v]) => { if (v !== undefined) url.searchParams.set(k, String(v)); });
   }
@@ -24,9 +23,7 @@ async function request<T>(path: string, params?: Record<string, string | number 
   const res = await fetch(url.toString(), { headers });
   if (res.status === 401) {
     // Token expired → force re-login
-    localStorage.removeItem("jbs_token");
-    localStorage.removeItem("jbs_store");
-    window.location.href = "/login";
+    redirectToLogin();
     throw new Error("Session expired");
   }
   if (!res.ok) throw new Error(`API error: ${res.status}`);

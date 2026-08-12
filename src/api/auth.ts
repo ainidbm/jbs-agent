@@ -2,6 +2,8 @@
  * Auth helpers — JWT storage + login/logout.
  */
 
+import { apiUrl } from "./config";
+
 const TOKEN_KEY = "jbs_token";
 const STORE_KEY = "jbs_store";
 
@@ -36,8 +38,7 @@ export function isLoggedIn(): boolean {
 }
 
 export async function login(password: string, storeId: string): Promise<{ token: string; store: StoreInfo }> {
-  const BASE = import.meta.env.VITE_WORKER_URL || "";
-  const resp = await fetch(`${BASE}/api/auth/login`, {
+  const resp = await fetch(apiUrl("/api/auth/login"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ password, storeId }),
@@ -50,7 +51,6 @@ export async function login(password: string, storeId: string): Promise<{ token:
 }
 
 export async function fetchStores(): Promise<StoreInfo[]> {
-  const BASE = import.meta.env.VITE_WORKER_URL || "";
-  const resp = await fetch(`${BASE}/api/stores/public`);
+  const resp = await fetch(apiUrl("/api/stores/public"));
   return resp.json();
 }

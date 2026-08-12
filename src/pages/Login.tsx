@@ -37,7 +37,7 @@ export default function Login() {
     try {
       const { token, store } = await login(password, storeId);
       saveAuth(token, store);
-      window.location.href = "/dashboard";
+      window.location.hash = "#/dashboard";
     } catch (e: any) {
       setError(e.message || "登录失败");
     } finally {
