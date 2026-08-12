@@ -17,10 +17,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          // Split heavy deps into separate chunks so initial page loads fast
-          antd: ["antd", "@ant-design/icons"],
           echarts: ["echarts", "echarts-for-react"],
-          vendor: ["react", "react-dom", "react-router-dom", "dayjs"],
         },
       },
     },
